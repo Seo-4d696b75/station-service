@@ -13,5 +13,5 @@
 			{"name":"check","description":"Gets list of all the entries in which the user is waiting."},	
 			{"name":"cancel","description":"Cancel the specified entry. This operation requires authentication as user who enqueued it. Operation for already dequeued entry is invalid,"}
 		],
-		"description":"\"Statoin Service\" Œ»İH–’†"
+		"description":"\"Statoin Service\" ç¾åœ¨å·¥äº‹ä¸­"
 }
