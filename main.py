@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Query
-from starlette.requests import Request
+from fastapi import FastAPI, Query, Request
 from pydantic import BaseModel, Field
 from typing import Optional, List
 import sys
@@ -9,9 +8,9 @@ import json
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy.exc import SQLAlchemyError
 
-from db import database
-from router import router
+from router import router, APIException
 
 
 # defince app instance
@@ -35,13 +34,6 @@ async def validation_err_handler(request: Request, exc: RequestValidationError):
             'detail': exc.errors()})
     )
 
-# Base Error
-class APIException(Exception):
-    def __init__(self, code, msg, detail='', headers={}):
-        self.code = code
-        self.msg = msg
-        self.detail = detail
-        self.headers = headers
 
 @app.exception_handler(APIException)
 async def api_exception_handler(request: Request, exc: APIException):
@@ -53,22 +45,22 @@ async def api_exception_handler(request: Request, exc: APIException):
         headers=exc.headers
     )
 
-# 起動時にDatabaseに接続する。
+@app.exception_handler(SQLAlchemyError)
+async def db_exception_handler(request: Request, exc: SQLAlchemyError):
+    return JSONResponse(
+        status_code = status.HTTP_400_BAD_REQUEST,
+        content = jsonable_encoder({
+            'msg':'internal db error.',
+            'detail': exc.errors()})
+    )
+
 @app.on_event("startup")
 async def startup():
-    await database.connect()
+    print('startup')
 
-# 終了時にDatabaseを切断する。
 @app.on_event("shutdown")
 async def shutdown():
-    await database.disconnect()
+    print('shutdown')
 
 # users routerを登録する。
 app.include_router(router)
-
-# middleware state.connectionにdatabaseオブジェクトをセットする。
-@app.middleware("http")
-async def db_session_middleware(request: Request, call_next):
-    request.state.connection = database
-    response = await call_next(request)
-    return response
