@@ -5,12 +5,17 @@ from sqlalchemy.dialects.postgresql import BOOLEAN as Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session
 import json
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
 Base=declarative_base()
 
 # init db client
-db = json.load(open('./db_setting.json','r',encoding='utf-8'))
-DATABASE_URL = f"postgresql://{db['User']}:{db['Password']}@{db['Host']}:{db['Port']}/{db['Database']}"
+DB_USER = os.environ["DB_USER"]
+DB_PASSWORD = os.environ["DB_PASSWORD"]
+DB_HOST = os.environ["DB_HOST"]
+DB_PORT = os.environ["DB_PORT"]
+DB_DATABASE = os.environ["DB_DATABASE"]
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
 
 
 engine = sqlalchemy.create_engine(DATABASE_URL, connect_args={'sslmode':'require'}, echo=False)
