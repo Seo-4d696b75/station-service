@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query
+from starlette.requests import Request
 from pydantic import BaseModel, Field
 from typing import Optional, List
 import sys
@@ -9,9 +10,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+from db import database
+from router import router
+
 
 # defince app instance
-api_setting = json.load(open('./api_setting.json','r'))
+api_setting = json.load(open('./api_setting.json','r',encoding='utf-8'))
 app = FastAPI(
     title = api_setting['title'],
     version = api_setting['version'],
@@ -27,10 +31,8 @@ async def validation_err_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code = status.HTTP_400_BAD_REQUEST,
         content = jsonable_encoder({
-            'status':'NG',
             'msg':'validation of request query failed.',
-            'detail': exc.errors()}),
-        headers={'WWW-Authenticate': 'Bearer error="invalid_request"'},
+            'detail': exc.errors()})
     )
 
 # Base Error
@@ -46,13 +48,27 @@ async def api_exception_handler(request: Request, exc: APIException):
     return JSONResponse(
         status_code = exc.code,
         content = jsonable_encoder({
-            'status':'NG',
             'msg': exc.msg,
             'detail': exc.detail }),
         headers=exc.headers
     )
 
+# 起動時にDatabaseに接続する。
+@app.on_event("startup")
+async def startup():
+    await database.connect()
 
-@app.get("/api/", )
-async def test():
-    return {"status":"OK", "msg":"this is api endpoint"}
+# 終了時にDatabaseを切断する。
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
+# users routerを登録する。
+app.include_router(router)
+
+# middleware state.connectionにdatabaseオブジェクトをセットする。
+@app.middleware("http")
+async def db_session_middleware(request: Request, call_next):
+    request.state.connection = database
+    response = await call_next(request)
+    return response
