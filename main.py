@@ -2,6 +2,8 @@ from fastapi import FastAPI, Query, Request
 from pydantic import BaseModel, Field
 from typing import Optional, List
 import sys
+import pathlib
+import os
 from fastapi import Depends, HTTPException, status
 from datetime import datetime
 import json
@@ -56,3 +58,7 @@ async def api_exception_handler(request: Request, exc: APIException):
 @app.get("/api/", )
 async def test():
     return {"status":"OK", "msg":"this is api endpoint"}
+
+os.makedirs('tmp', exist_ok=True)
+p_empty = pathlib.Path('tmp/app-initialized')
+print(p_empty)
