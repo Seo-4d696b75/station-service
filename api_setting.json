@@ -1,0 +1,17 @@
+{
+		"title":"Station Service",
+		"version":"0.1.0",
+		"meta_data":[
+			{"name":"list","description":"Get list of queue created by the user. The authenticated user can only access to queue which they have created by themself."},
+			{"name":"queue","description":"Get information of the queue. **No Authentication required**"},
+			{"name":"add","description":"Add a new queue. Information of queue needs to be posted and authenticated user will be set as creator automatically."},
+			{"name":"remove","description":"Remove the specified queue. This operation requires authentication as user, who created the queue."},
+			{"name":"enqueue","description":"Enqueue an entry to specified queue. The authenticated user will be added and registered. If the user already has a \"wait\" entry in the queue, this operation is invalid."},
+			{"name":"wait","description":"Get information of the entry of the specified queue. **No Authentication requreid**"},
+			{"name":"details","description":"Get base information and list of entries in the specified queue."},
+			{"name":"dequeue","description":"Dequeue the specified entry. All the other entries indexed before the specified one will also be dequeued."},
+			{"name":"check","description":"Gets list of all the entries in which the user is waiting."},	
+			{"name":"cancel","description":"Cancel the specified entry. This operation requires authentication as user who enqueued it. Operation for already dequeued entry is invalid,"}
+		],
+		"description":"\"Statoin Service\" åªç›çHéñíÜ"
+}
