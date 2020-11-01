@@ -1,11 +1,11 @@
-
-create table if not exists station_list(
+drop table if exists station_list;
+create table station_list(
  code int not null primary key,
  id varchar(16) unique,
  name varchar(64) not null,
  name_kana varchar(64) not null,
- lat float4 not null,
- lng float4 not null,
+ lat numeric(10,6) not null,
+ lng numeric(10,6) not null,
  prefecture int not null,
  postal_code varchar(16),
  address varchar(128),
@@ -16,53 +16,25 @@ create table if not exists station_list(
  attr varchar(16)
 );
 
-\copy station_list from /Users/skaor/Documents/ekimemo/station_database/src/station.csv with csv header null 'NULL' encoding 'utf-8';
+create index on station_list (code);
+create index on station_list (id);
 
-create table if not exists line_list(
- code int unsigned not null primary key,
+drop table if exists line_list;
+create table line_list(
+ code int not null primary key,
  id varchar(16) unique,
  name varchar(64) not null,
  name_kana varchar(64) not null,
  name_formal varchar(64),
- station_size int unsigned not null,
- company_code int unsigned,
+ station_size int not null,
+ company_code int,
  color varchar(16),
  symbol varchar(16),
- closed tinyint unsigned not null,
+ closed boolean not null,
  closed_date date default null,
- impl tinyint unsigned not null,
-    fulltext key(name) with parser ngram,
-    fulltext key(name_kana) with parser ngram
-);
- 
-load data 
-    local infile "/Users/skaor/Documents/ekimemo/station_database/src/line.csv" 
-    into table line_list 
-    fields terminated by ',' 
-    LINES TERMINATED BY '\r\n'
-    ignore 1 lines;
-
-create table if not exists register(
-    station_code int unsigned not null,
-    line_code int unsigned not null,
-    list_index int unsigned not null,
-    numbering varchar(64),
-    primary key (station_code, line_code)
+ impl boolean not null
 );
 
-load data 
-    local infile "/Users/skaor/Documents/ekimemo/station_database/src/register.csv" 
-    into table register
-    fields terminated by ',' 
-    LINES TERMINATED BY '\r\n'
-    ignore 1 lines;
+create index on line_list (code);
+create index on line_list (id);
 
-create table if not exists prefecture(
-    code int unsigned not null primary key,
-    name varchar(16) not null
-);
-
-load data local infile "/Users/skaor/Documents/ekimemo/station_database/src/prefecture.csv" 
-    into table prefecture
-    fields terminated by ',' 
-    LINES TERMINATED BY '\r\n';

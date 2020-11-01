@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy.schema import Column
 from sqlalchemy.types import Integer, String, Float, Date
-from sqlalchemy.dialects.postgresql import BOOLEAN as Boolean
+from sqlalchemy.dialects.postgresql import BOOLEAN as Boolean, NUMERIC as Numeric
 from sqlalchemy.orm import sessionmaker, scoped_session
 import json
 from sqlalchemy.ext.declarative import declarative_base
@@ -28,11 +28,11 @@ Session = scoped_session(sessionmaker(
 class Station(Base):
     __tablename__ = "station_list"
     code = Column(Integer, primary_key=True, index=True)
-    id = Column(String(16), unique=True)
+    id = Column(String(16), unique=True, index=True)
     name = Column(String(64), nullable=False)
     name_kana = Column(String(64), nullable=False)
-    lat = Column(Float, nullable=False)
-    lng = Column(Float, nullable=False)
+    lat = Column(Numeric, nullable=False)
+    lng = Column(Numeric, nullable=False)
     prefecture = Column(Integer, nullable=False)
     postal_code = Column(String(16))
     address = Column(String(128))
@@ -41,3 +41,18 @@ class Station(Base):
     closed_date = Column(Date)
     impl = Column(Boolean, nullable=False)
     attr = Column(String(16))
+
+class Line(Base):
+    __tablename__ = "line_list"
+    code = Column(Integer, primary_key=True, index=True)
+    id = Column(String(16), unique=True, index=True)
+    name = Column(String(64), nullable=False)
+    name_kana = Column(String(64), nullable=False)
+    name_formal = Column(String(64))
+    station_size = Column(Integer, nullable=False)
+    company_code = Column(Integer)
+    color = Column(String(16))
+    symbol = Column(String(16))
+    closed = Column(Boolean, nullable=False)
+    closed_date = Column(Date)
+    impl = Column(Boolean, nullable=False)
