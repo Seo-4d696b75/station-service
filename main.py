@@ -10,6 +10,7 @@ import json
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
 from router import router, APIException
@@ -66,3 +67,11 @@ async def shutdown():
 
 # users routerを登録する。
 app.include_router(router)
+
+# CORS config
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
