@@ -14,6 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
 from router import router, APIException
+from db import Session
 
 
 # defince app instance
@@ -64,6 +65,7 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     print('shutdown')
+    Session.remove()
 
 # users routerを登録する。
 app.include_router(router)

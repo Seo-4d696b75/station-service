@@ -7,7 +7,6 @@ import json
 from sqlalchemy.ext.declarative import declarative_base
 import os
 
-Base=declarative_base()
 
 # init db client
 DB_USER = os.environ["DB_USER"]
@@ -24,6 +23,8 @@ Session = scoped_session(sessionmaker(
     autocommit=False,
     autoflush=True
 ))
+
+Base = declarative_base()
 
 class Station(Base):
     __tablename__ = "station_list"
