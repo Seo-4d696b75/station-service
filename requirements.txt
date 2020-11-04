@@ -3,3 +3,4 @@ email-validator
 uvicorn
 psycopg2
 sqlalchemy
+marshmallow_sqlalchemy
