@@ -3,6 +3,7 @@ create table station_list(
  code int not null primary key,
  id varchar(16) unique,
  name varchar(64) not null,
+ original_name varchar(64) not null,
  name_kana varchar(64) not null,
  lat numeric(10,6) not null,
  lng numeric(10,6) not null,
@@ -38,3 +39,11 @@ create table line_list(
 create index on line_list (code);
 create index on line_list (id);
 
+drop table if exists data_info;
+create table data_info(
+  id serial primary key,
+  data_version bigint not null,
+  updated_at TIMESTAMP not null
+);
+
+create index on data_info (id);

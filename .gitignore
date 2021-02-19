@@ -1,3 +1,5 @@
 db_setting.json
-test_local*
+*.bat
 __pycache__/
+.vscode/launch.json
+data/*

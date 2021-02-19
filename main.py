@@ -13,8 +13,9 @@ from fastapi.encoders import jsonable_encoder
 from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
-from router import router, APIException
-from db import Session
+from py.router import router, APIException
+from py.db import Session
+
 
 
 # defince app instance

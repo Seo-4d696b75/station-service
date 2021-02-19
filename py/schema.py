@@ -1,6 +1,11 @@
-from db import Station, Line
+from py.db import Station, Line, DataInfo
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, SQLAlchemySchema, auto_field
 
+
+class DataInfoSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = DataInfo
+        ordered = True
 
 class StationSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -10,11 +15,12 @@ class StationSchema(SQLAlchemyAutoSchema):
 class ShortStationSchema(SQLAlchemySchema):
     class Meta:
         model = Station
-        rodered = True
+        ordered = True
     
     code = auto_field()
     id = auto_field()
     name = auto_field()
+    original_name = auto_field()
     name_kana = auto_field()
     prefecture = auto_field()
 
@@ -27,7 +33,7 @@ class LineSchema(SQLAlchemyAutoSchema):
 class ShortLineSchema(SQLAlchemySchema):
     class Meta:
         model = Line
-        rodered = True
+        ordered = True
     
     code = auto_field()
     id = auto_field()

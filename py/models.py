@@ -1,4 +1,9 @@
 from pydantic import BaseModel, Field
+import datetime
+
+class DataInfoOut(BaseModel):
+    data_version: int = Field(..., description="データバージョン [station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)")
+    updated_at: datetime.datetime = Field(..., description="現在のデータバージョンに更新された日時")
 
 class BaseStationOut(BaseModel):
     code: int = Field(..., description="駅コード")
