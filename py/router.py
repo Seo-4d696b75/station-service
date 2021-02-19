@@ -26,8 +26,6 @@ pattern_kana = re.compile('[\u3041-\u309F]+')
 
 url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/out/tree.json"
 data=get_url(url)
-with open("./data/tree.json", mode="w", encoding="utf-8") as f:
-    f.write(data)
 tree = KdTree(json.loads(data))
 
 station_schema = schema.StationSchema()
