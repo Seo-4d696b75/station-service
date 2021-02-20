@@ -53,7 +53,7 @@ async def get_station(
 ):
     if code == 0 and id is None:
         raise APIException(400, 'lack of query',
-                           'either code or id must be spesified.')
+                           'either code or id must be specified.')
     if id is not None:
         data = Session().query(Station).filter(Station.id == id).first()
         if data is None:
@@ -74,7 +74,7 @@ async def get_line(
 ):
     if code == 0 and id is None:
         raise APIException(400, 'lack of query',
-                           'either code or id must be spesified.')
+                           'either code or id must be specified.')
     if id is not None:
         data = Session().query(Line).filter(Line.id == id).first()
         if data is None:

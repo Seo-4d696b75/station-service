@@ -9,6 +9,7 @@ class BaseStationOut(BaseModel):
     code: int = Field(..., description="駅コード")
     id: str = Field(..., description="駅ID")
     name: str = Field(..., description="駅の名称")
+    original_name: str = Field(..., description="駅名称のうち重複防止の接尾語を取り除いた名前")
     name_kana: str = Field(..., description="駅名称のかな表記（駅名重複防止のための接尾語のかな表記は含まず・一部ひらがな以外の記号を含む）")
     prefecture: int = Field(..., description="駅所在地の[都道府県コード](https://www.soumu.go.jp/denshijiti/code.html)")
 
