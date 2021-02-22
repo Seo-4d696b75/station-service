@@ -6,7 +6,7 @@ import re
 import json
 from py.tree import KdTree
 from typing import Optional, List, Union
-from py.data import get_url
+from py.data import get_url, check_data
 
 # Base Error
 
@@ -23,6 +23,7 @@ router = APIRouter()
 
 pattern_kana = re.compile('[\u3041-\u309F]+')
 
+check_data()
 
 url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/out/tree.json"
 data=get_url(url)
