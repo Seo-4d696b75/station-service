@@ -6,16 +6,24 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 import json
 from sqlalchemy.ext.declarative import declarative_base
 import os
+import urllib
 
-DB_USER = os.environ["DB_USER"]
-DB_PASSWORD = os.environ["DB_PASSWORD"]
-DB_HOST = os.environ["DB_HOST"]
-DB_PORT = os.environ["DB_PORT"]
-DB_DATABASE = os.environ["DB_DATABASE"]
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
-url = os.environ.get("DATABASE_URL", DATABASE_URL)
+url = os.environ.get("DATABASE_URL", None)
+if url is None:
+    DB_USER = os.environ["DB_USER"]
+    DB_PASSWORD = os.environ["DB_PASSWORD"]
+    DB_HOST = os.environ["DB_HOST"]
+    DB_PORT = os.environ["DB_PORT"]
+    DB_DATABASE = os.environ["DB_DATABASE"]
+    url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
+else:
+    u = urllib.parse.urlparse(url)
+    # scheme 'postgres' may not be accepted
+    url = urllib.parse.urlunparse(
+        ('postgresql', u.netloc, u.path, u.params, u.query, u.fragment))
 print(f"db url: {url}")
-engine = sqlalchemy.create_engine(url, connect_args={'sslmode':'require'}, echo=False)
+engine = sqlalchemy.create_engine(
+    url, connect_args={'sslmode': 'require'}, echo=False)
 Session = scoped_session(sessionmaker(
     bind=engine,
     autocommit=False,
@@ -23,6 +31,7 @@ Session = scoped_session(sessionmaker(
 ))
 
 Base = declarative_base()
+
 
 class Station(Base):
     __tablename__ = "station_list"
@@ -42,6 +51,7 @@ class Station(Base):
     impl = Column(Boolean, nullable=False)
     attr = Column(String(16))
 
+
 class Line(Base):
     __tablename__ = "line_list"
     code = Column(Integer, primary_key=True, index=True)
@@ -56,6 +66,7 @@ class Line(Base):
     closed = Column(Boolean, nullable=False)
     closed_date = Column(Date)
     impl = Column(Boolean, nullable=False)
+
 
 class DataInfo(Base):
     __tablename__ = 'data_info'
