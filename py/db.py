@@ -13,7 +13,9 @@ DB_HOST = os.environ["DB_HOST"]
 DB_PORT = os.environ["DB_PORT"]
 DB_DATABASE = os.environ["DB_DATABASE"]
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
-engine = sqlalchemy.create_engine(os.environ.get("DATABASE_URL", DATABASE_URL), connect_args={'sslmode':'require'}, echo=False)
+url = os.environ.get("DATABASE_URL", DATABASE_URL)
+print(f"db url: {url}")
+engine = sqlalchemy.create_engine(url, connect_args={'sslmode':'require'}, echo=False)
 Session = scoped_session(sessionmaker(
     bind=engine,
     autocommit=False,
