@@ -21,9 +21,12 @@ else:
     # scheme 'postgres' may not be accepted
     url = urllib.parse.urlunparse(
         ('postgresql', u.netloc, u.path, u.params, u.query, u.fragment))
-print(f"db url: {url}")
+
+DATABASE_URL = url
+print(f"db url: {DATABASE_URL}")
+
 engine = sqlalchemy.create_engine(
-    url, connect_args={'sslmode': 'require'}, echo=False)
+    DATABASE_URL, connect_args={'sslmode': 'require'}, echo=False)
 Session = scoped_session(sessionmaker(
     bind=engine,
     autocommit=False,
