@@ -5,3 +5,4 @@ psycopg2
 sqlalchemy
 marshmallow
 marshmallow_sqlalchemy
+regex

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from py.db import Station, Line, Session, DataInfo
 from py import schema, models
 from sqlalchemy import or_, func
-import re
+import regex
 import json
 from py.tree import KdTree
 from typing import Optional, List, Union
@@ -21,7 +21,7 @@ class APIException(Exception):
 
 router = APIRouter()
 
-pattern_kana = re.compile('[\u3041-\u309F]+')
+pattern_kana = regex.compile(r'[\p{Hiragana}\p{P}ー・]+')
 
 check_data()
 
