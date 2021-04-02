@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 import datetime
+from typing import Union
 
 class DataInfoOut(BaseModel):
     data_version: int = Field(..., description="データバージョン [station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)")
@@ -24,6 +25,9 @@ class StationOut(BaseStationOut):
     closed_date: str = Field(None, description="駅廃止年月日")
     attr: str = Field(..., description="駅の属性値")
 
+class UnionStationOut(BaseModel):
+    __root__: Union[BaseStationOut, StationOut]
+
 class BaseLineOut(BaseModel):
     code: int = Field(..., description="路線コード")
     id: str = Field(..., description="路線ID")
@@ -38,6 +42,9 @@ class LineOut(BaseLineOut):
     symbol: str = Field(None, description='路線記号')
     closed: bool = Field(..., description='`true`なら廃線')
     closed_date: str = Field(None, description='廃止年月日')
+
+class UnionLineOut(BaseModel):
+    __root__: Union[BaseLineOut, LineOut]
 
 class NearestSearchOut(BaseModel):
     dist: float = Field(..., description='探索始点からの距離 `s:true`なら球面上で計算した距離[m] `s:false`なら緯度・経度の値から疑似的に計算したユークリッド距離（実際の距離ではない）')

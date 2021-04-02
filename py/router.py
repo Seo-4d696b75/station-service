@@ -89,7 +89,7 @@ async def get_line(
     return line_schema.dump(data)
 
 
-@router.get("/api/station/search", response_model=List[Union[models.StationOut, models.BaseStationOut]], tags=['station', 'name_search'])
+@router.get("/api/station/search", response_model=List[models.UnionStationOut], tags=['station', 'name_search'])
 async def search_for_station(
         name: str = Query(..., description='駅名称または読み仮名の全部・一部分', min_length=1),
         original: bool = Query(
@@ -114,7 +114,7 @@ async def search_for_station(
         return list(map(lambda d: short_station_schema.dump(d), data))
 
 
-@router.get("/api/line/search", response_model=List[Union[models.BaseLineOut, models.LineOut]], tags=['line', 'name_search'])
+@router.get("/api/line/search", response_model=List[models.UnionLineOut], tags=['line', 'name_search'])
 async def search_for_line(
         name: str = Query(..., description='路線名称または読み仮名の全部・一部分', min_length=1),
         details: bool = Query(
