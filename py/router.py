@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from py.db import Station, Line, Session, DataInfo
+from py.data import URL_DATA_BASE
 from py import schema, models
 from sqlalchemy import or_, func
 import regex
@@ -25,7 +26,7 @@ pattern_kana = regex.compile(r'[\p{Hiragana}\p{P}ー・]+')
 
 check_data()
 
-url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/out/tree.json"
+url=f"{URL_DATA_BASE}/tree.json"
 data=get_url(url)
 tree = KdTree(json.loads(data))
 

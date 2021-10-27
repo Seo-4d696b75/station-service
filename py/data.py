@@ -1,12 +1,13 @@
 import json
 import urllib.request
-from py.db import Station, Line, DataInfo, engine, Session, DATABASE_URL
+from py.db import DataInfo, Session, DATABASE_URL
 import sqlalchemy
-import datetime
 import os
-import shutil
 import psycopg2
 import io
+
+URL_DATA_BASE = "https://raw.githubusercontent.com/Seo-4d696b75/station_database/main/out/main"
+URL_DATA_VERSION = "https://raw.githubusercontent.com/Seo-4d696b75/station_database/main/latest_info.json"
 
 def parse_csv_line(i, d, cols, index):
     if d == '':
@@ -65,21 +66,21 @@ def get_url(url):
         raise RuntimeError(e)
 
 def get_data(info):
-    url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/src/station.csv"
+    url=f"{URL_DATA_BASE}/station.csv"
     data = get_url(url)
     with open("data/station.csv", mode="w", encoding="utf-8") as f:
         f.write(parse_csv(data, 15, 13))
-    url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/src/line.csv"
+    url=f"{URL_DATA_BASE}/line.csv"
     data= get_url(url)
     with open("data/line.csv", mode="w", encoding="utf-8") as f:
         f.write(parse_csv(data, 12, 11))
 
 def update_data(info):
     # Here, ORM not used for loading performance
-    url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/out/station.json"
+    url=f"{URL_DATA_BASE}/station.json"
     data = get_url(url)
     stations = list(map(lambda s: parse_station(s), json.loads(data)))
-    url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/out/line.json"
+    url=f"{URL_DATA_BASE}/line.json"
     data = get_url(url)
     lines = list(map(lambda s: parse_line(s), json.loads(data)))
     with psycopg2.connect(dsn=os.environ.get("DATABASE_URL", DATABASE_URL)) as con:
@@ -108,8 +109,7 @@ def update_data(info):
 def check_data():
     id=Session().query(sqlalchemy.func.max(DataInfo.id)).first()[0]
     current=Session().query(DataInfo).filter(DataInfo.id == id).first() if id is not None else None
-    url="https://raw.githubusercontent.com/Seo-4d696b75/station_database/master/latest_info.json"
-    latest=json.loads(get_url(url))
+    latest=json.loads(get_url(URL_DATA_VERSION))
     if current is None or current.data_version < latest['version']:
         print(f"new data found. info:{latest}")
         update_data(latest)
