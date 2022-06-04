@@ -1,12 +1,12 @@
-import sqlalchemy
-from sqlalchemy.schema import Column
-from sqlalchemy.types import Integer, String, Float, Date, DateTime, BigInteger
-from sqlalchemy.dialects.postgresql import BOOLEAN as Boolean, NUMERIC as Numeric
-from sqlalchemy.orm import sessionmaker, scoped_session
-import json
-from sqlalchemy.ext.declarative import declarative_base
 import os
 import urllib
+
+import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.schema import Column
+from sqlalchemy.types import BigInteger, DateTime, Integer
+
 
 url = os.environ.get("DATABASE_URL", None)
 if url is None:
@@ -34,42 +34,6 @@ Session = scoped_session(sessionmaker(
 ))
 
 Base = declarative_base()
-
-
-class Station(Base):
-    __tablename__ = "station_list"
-    code = Column(Integer, primary_key=True, index=True)
-    id = Column(String(16), unique=True, index=True)
-    name = Column(String(64), nullable=False)
-    original_name = Column(String(64), nullable=False)
-    name_kana = Column(String(64), nullable=False)
-    lat = Column(Numeric, nullable=False)
-    lng = Column(Numeric, nullable=False)
-    prefecture = Column(Integer, nullable=False)
-    postal_code = Column(String(16))
-    address = Column(String(128))
-    closed = Column(Boolean, nullable=False)
-    open_date = Column(Date)
-    closed_date = Column(Date)
-    impl = Column(Boolean, nullable=False)
-    attr = Column(String(16))
-
-
-class Line(Base):
-    __tablename__ = "line_list"
-    code = Column(Integer, primary_key=True, index=True)
-    id = Column(String(16), unique=True, index=True)
-    name = Column(String(64), nullable=False)
-    name_kana = Column(String(64), nullable=False)
-    name_formal = Column(String(64))
-    station_size = Column(Integer, nullable=False)
-    company_code = Column(Integer)
-    color = Column(String(16))
-    symbol = Column(String(16))
-    closed = Column(Boolean, nullable=False)
-    closed_date = Column(Date)
-    impl = Column(Boolean, nullable=False)
-
 
 class DataInfo(Base):
     __tablename__ = 'data_info'

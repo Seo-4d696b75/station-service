@@ -1,18 +1,24 @@
 from pydantic import BaseModel, Field
 import datetime
-from typing import Union
+
 
 class DataInfoOut(BaseModel):
-    data_version: int = Field(..., description="データバージョン [station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)")
-    updated_at: datetime.datetime = Field(..., description="現在のデータバージョンに更新された日時")
+    data_version: int = Field(
+        ..., description="データバージョン [station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)")
+    updated_at: datetime.datetime = Field(...,
+                                          description="現在のデータバージョンに更新された日時")
+
 
 class BaseStationOut(BaseModel):
     code: int = Field(..., description="駅コード")
     id: str = Field(..., description="駅ID")
     name: str = Field(..., description="駅の名称")
     original_name: str = Field(..., description="駅名称のうち重複防止の接尾語を取り除いた名前")
-    name_kana: str = Field(..., description="駅名称のかな表記（駅名重複防止のための接尾語のかな表記は含まず・一部ひらがな以外の記号を含む）")
-    prefecture: int = Field(..., description="駅所在地の[都道府県コード](https://www.soumu.go.jp/denshijiti/code.html)")
+    name_kana: str = Field(...,
+                           description="駅名称のかな表記（駅名重複防止のための接尾語のかな表記は含まず・一部ひらがな以外の記号を含む）")
+    prefecture: int = Field(
+        ..., description="駅所在地の[都道府県コード](https://www.soumu.go.jp/denshijiti/code.html)")
+    impl: bool = Field(..., description="駅メモ実装なら`true`")
 
 
 class StationOut(BaseStationOut):
@@ -23,16 +29,16 @@ class StationOut(BaseStationOut):
     closed: bool = Field(..., description="廃駅なら`true`")
     open_date: str = Field(None, description="駅開業年月日")
     closed_date: str = Field(None, description="駅廃止年月日")
-    attr: str = Field(..., description="駅の属性値")
+    attr: str = Field(None, description="駅の属性値（駅メモ実装でない場合はnull）")
 
-class UnionStationOut(BaseModel):
-    __root__: Union[BaseStationOut, StationOut]
 
 class BaseLineOut(BaseModel):
     code: int = Field(..., description="路線コード")
     id: str = Field(..., description="路線ID")
     name: str = Field(..., description="路線の名称")
     name_kana: str = Field(..., description="路線名称のかな表記（括弧などの記号はそのまま）")
+    impl: bool = Field(..., description="駅メモ実装なら`true`")
+
 
 class LineOut(BaseLineOut):
     name_formal: str = Field(None, description='路線名の正式名称 `name`と同一の場合は省略')
@@ -43,9 +49,8 @@ class LineOut(BaseLineOut):
     closed: bool = Field(..., description='`true`なら廃線')
     closed_date: str = Field(None, description='廃止年月日')
 
-class UnionLineOut(BaseModel):
-    __root__: Union[BaseLineOut, LineOut]
 
 class NearestSearchOut(BaseModel):
-    dist: float = Field(..., description='探索始点からの距離 `s:true`なら球面上で計算した距離[m] `s:false`なら緯度・経度の値から疑似的に計算したユークリッド距離（実際の距離ではない）')
+    dist: float = Field(
+        ..., description='探索始点からの距離 `s:true`なら球面上で計算した距離[m] `s:false`なら緯度・経度の値から疑似的に計算したユークリッド距離（実際の距離ではない）')
     station: StationOut = Field(..., description='駅')
