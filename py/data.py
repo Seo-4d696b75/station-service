@@ -82,6 +82,7 @@ class Line:
             "id": self.id,
             "name": self.name,
             "name_kana": self.name_kana,
+            "station_size": self.station_size,
             "company_code": self.company_code,
             "color": self.color,
             "symbol": self.symbol,

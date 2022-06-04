@@ -41,7 +41,6 @@ class BaseLineOut(BaseModel):
 
 
 class LineOut(BaseLineOut):
-    name_formal: str = Field(None, description='路線名の正式名称 `name`と同一の場合は省略')
     station_size: int = Field(..., ge=1, description='路線に登録されている駅数')
     company_code: int = Field(None, description='運行会社コード')
     color: str = Field(None, description='路線カラーコード `#[0-9A-F]\{6\}`')
