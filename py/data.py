@@ -27,7 +27,6 @@ URL_DATA_VERSION = data_env["data_version_url"]
 
 class Station:
     def __init__(self, obj: dict) -> None:
-        self.obj = obj
         self.code = int(obj["code"])
         self.id = str(obj["id"])
         self.name = str(obj["name"])
@@ -45,11 +44,26 @@ class Station:
         self.attr: Union[str, None] = obj.get("attr", None)
 
     def dump(self):
-        return self.obj
+        return {
+            "code": self.code,
+            "id": self.id,
+            "name": self.name,
+            "original_name": self.original_name,
+            "name_kana": self.name_kana,
+            "lat": self.lat,
+            "lng": self.lng,
+            "prefecture": self.prefecture,
+            "postal_code": self.postal_code,
+            "address": self.address,
+            "closed": self.closed,
+            "open_date": self.open_date,
+            "closed_date": self.closed_date,
+            "impl": self.impl,
+            "attr": self.attr
+        }
 
 class Line:
     def __init__(self, obj: dict) -> None:
-        self.obj = obj
         self.code = int(obj["code"])
         self.id = str(obj["id"])
         self.name = str(obj["name"])
@@ -63,7 +77,18 @@ class Line:
         self.impl = bool(obj["impl"])
 
     def dump(self):
-        return self.obj
+        return {
+            "code": self.code,
+            "id": self.id,
+            "name": self.name,
+            "name_kana": self.name_kana,
+            "company_code": self.company_code,
+            "color": self.color,
+            "symbol": self.symbol,
+            "closed": self.closed,
+            "closed_date": self.closed_date,
+            "impl": self.impl,
+        }
 
 class InMemoryDB:
     station_map: "dict[Union[int, str], Station]" = {}
