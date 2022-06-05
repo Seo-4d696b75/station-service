@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Union
 import json
 import urllib.request
@@ -7,6 +7,8 @@ import sqlalchemy
 from py.db import DataInfo, Session
 from py.schema import DataInfoSchema
 from py.tree import KdTree
+
+JST = timezone(timedelta(hours=+9), 'JST')
 
 logo_text = open('./img/logo.txt', 'r', encoding='utf-8').read()
 
@@ -139,7 +141,7 @@ if current is None or current.data_version < latest['version']:
     print(f"new data found. info:{latest}")
     info = DataInfo()
     info.data_version = latest["version"]
-    info.updated_at = datetime.now()
+    info.updated_at = datetime.now(JST)
     session.add(info)
     session.commit()
     current = info
