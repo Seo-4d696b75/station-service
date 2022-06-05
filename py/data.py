@@ -104,12 +104,13 @@ class InMemoryDB:
     line_map: "dict[Union[int, str], Line]" = {}
     lines: "list[Line]" = []
     tree: KdTree
+    tree_extra: KdTree
 
     def __init__(self, version_info) -> None:
         self.version_info: dict = version_info
         # load line list
         lines = json.loads(
-            get_url(f"{URL_DATA_BASE}/line.json")
+            get_url(f"{URL_DATA_BASE}/extra/line.json")
         )
         for obj in lines:
             line = Line(obj)
@@ -118,7 +119,7 @@ class InMemoryDB:
             self.line_map[line.id] = line
         # load station list
         stations = json.loads(
-            get_url(f"{URL_DATA_BASE}/station.json")
+            get_url(f"{URL_DATA_BASE}/extra/station.json")
         )
         for obj in stations:
             station = Station(obj)
@@ -127,9 +128,13 @@ class InMemoryDB:
             self.station_map[station.id] = station
         # load kd-tree
         nodes = json.loads(
-            get_url(f"{URL_DATA_BASE}/tree.json")
+            get_url(f"{URL_DATA_BASE}/main/tree.json")
         )
         self.tree = KdTree(nodes)
+        nodes = json.loads(
+            get_url(f"{URL_DATA_BASE}/extra/tree.json")
+        )
+        self.tree_extra = KdTree(nodes)
 
 
 session = Session()

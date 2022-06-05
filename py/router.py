@@ -158,9 +158,14 @@ async def nearest_search(
         lat: float = Query(..., description='探索点の緯度', ge=-90, le=90),
         lng: float = Query(..., description='探索点の経度', ge=-180, le=180),
         k: int = Query(1, description='探索する近傍点の数', ge=1, le=10),
-        s: bool = Query(False, description='球体を考慮して距離を計算する')
+        s: bool = Query(False, description='球体を考慮して距離を計算する'),
+        extra: bool = Query(
+            False,
+            description='false:駅メモ実装の駅のみ検索, true:独自追加の廃駅も含め検索'
+        )
 ):
-    neighbors = data.tree.search_nearest(lat, lng, k, 0, s)
+    tree = data.tree_extra if extra else data.tree
+    neighbors = tree.search_nearest(lat, lng, k, 0, s)
     digit = 1 if s else 6
     list = [
         {
