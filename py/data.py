@@ -8,6 +8,9 @@ from py.db import DataInfo, Session
 from py.schema import DataInfoSchema
 from py.tree import KdTree
 
+logo_text = open('./img/logo.txt', 'r', encoding='utf-8').read()
+
+
 def get_url(url):
     try:
         with urllib.request.urlopen(url) as res:
@@ -62,6 +65,7 @@ class Station:
             "attr": self.attr
         }
 
+
 class Line:
     def __init__(self, obj: dict) -> None:
         self.code = int(obj["code"])
@@ -90,6 +94,7 @@ class Line:
             "closed_date": self.closed_date,
             "impl": self.impl,
         }
+
 
 class InMemoryDB:
     station_map: "dict[Union[int, str], Station]" = {}
@@ -141,7 +146,7 @@ if current is None or current.data_version < latest['version']:
 else:
     print(f"data is up-to-dated. version:{latest['version']}")
 
-    
+
 data_info_schema = DataInfoSchema()
 info = data_info_schema.dump(current)
 

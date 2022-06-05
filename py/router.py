@@ -1,10 +1,10 @@
 from typing import List
 
 import regex
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, responses
 
 from py import models
-from py.data import data
+from py.data import data, logo_text
 
 # Base Error
 
@@ -21,9 +21,24 @@ router = APIRouter()
 
 pattern_kana = regex.compile(r'[\p{Hiragana}\p{P}ー・]+')
 
+
+@router.get("/")
+async def get_root():
+    return responses.HTMLResponse(
+        content="""
+        <h1>Station-Service API へようこそ!</h1>
+        <a href="/api/docs">APIの詳細はDocsを参照してください</a>
+        <script>""" +
+        logo_text +
+        "</script>"
+    )
+
+
 @router.get("/api")
 async def api_root():
-    return {"msg": "this is api endpoint", "detail": "/api/docs"}
+    return responses.RedirectResponse(
+        url="/api/docs"
+    )
 
 
 @router.get("/api/info", response_model=models.DataInfoOut, tags=['info'])
