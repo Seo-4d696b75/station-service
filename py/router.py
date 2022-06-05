@@ -110,37 +110,45 @@ async def get_line(
 async def search_for_station(
         name: str = Query(..., description='駅名称または読み仮名の全部・一部分', min_length=1),
         original: bool = Query(
-            True, description='true:駅名称を検索するとき、駅名重複防止のための接尾語を無視する. 末尾に頻出する都道府県名や鉄道会社名に検索がヒットして欲しくない場合はtrueを指定する'),
+            True,
+            description='true:駅名称を検索するとき、駅名重複防止のための接尾語を無視する. 末尾に頻出する都道府県名や鉄道会社名に検索がヒットして欲しくない場合はtrueを指定する'
+        ),
+        extra: bool = Query(
+            False,
+            description='false:駅メモ実装の駅のみ検索, true:独自追加の廃駅も含め検索'
+        )
 ):
     if len(name) == 1 and pattern_kana.fullmatch(name):
         return []
-    criteria_name = [
+    criteria = (
         lambda e: name in e.original_name
         if original else
         lambda e: name in e.name
-    ]
+    )
     if pattern_kana.fullmatch(name) is not None:
-        criteria_name.append(
-            lambda e: name in e.name_kana
-        )
-    stations = [
-        s.dump() for s in data.stations
-        if any([c(s) for c in criteria_name])
-    ]
+        criteria = _or(criteria, lambda e: name in e.name_kana)
+    if not extra:
+        criteria = _and(lambda e: e.impl, criteria)
+    stations = [s.dump() for s in data.stations if criteria(s)]
     return stations
 
 
 @router.get("/api/line/search", response_model=List[models.BaseLineOut], tags=['line', 'name_search'])
 async def search_for_line(
         name: str = Query(..., description='路線名称または読み仮名の全部・一部分', min_length=1),
+        extra: bool = Query(
+            False,
+            description='false:駅メモ実装の路線のみ検索, true:独自追加の廃線も含め検索'
+        )
 ):
     if len(name) == 1 and pattern_kana.fullmatch(name):
         return []
-    criteria = (
-        lambda e: name in e.name or name in e.name_kana
-    ) if pattern_kana.fullmatch(name) is not None else (
-        lambda e: name in e.name
-    )
+
+    def criteria(e): return name in e.name
+    if pattern_kana.fullmatch(name) is not None:
+        criteria = _or(criteria, lambda e: name in e.name_kana)
+    if not extra:
+        criteria = _and(lambda e: e.impl, criteria)
     lines = [l.dump() for l in data.lines if criteria(l)]
     return lines
 
@@ -162,3 +170,11 @@ async def nearest_search(
         for d in neighbors
     ]
     return list
+
+
+def _and(p1, p2):
+    return lambda e: p1(e) and p2(e)
+
+
+def _or(p1, p2):
+    return lambda e: p1(e) or p2(e)
