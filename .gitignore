@@ -1,5 +1,4 @@
-db_setting.json
+/db_credentials.sh
 *.bat
 __pycache__/
-.vscode/launch.json
 data/*
