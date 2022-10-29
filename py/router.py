@@ -43,7 +43,9 @@ async def api_root():
 
 @router.get("/api/info", response_model=models.DataInfoOut, tags=['info'])
 async def get_info():
-    return data.version_info
+    return {
+        "data_version": data.version,
+    }
 
 
 @router.get("/api/station", response_model=models.StationOut, tags=['get', 'station'])
