@@ -1,11 +1,8 @@
-from datetime import datetime, timezone, timedelta
-from typing import Union
 import json
 import urllib.request
+from datetime import timedelta, timezone
+from typing import Union
 
-import sqlalchemy
-from py.db import DataInfo, Session
-from py.schema import DataInfoSchema
 from py.tree import KdTree
 
 JST = timezone(timedelta(hours=+9), 'JST')
@@ -99,6 +96,7 @@ class Line:
 
 
 class InMemoryDB:
+    version: int
     station_map: "dict[Union[int, str], Station]" = {}
     stations: "list[Station]" = []
     line_map: "dict[Union[int, str], Line]" = {}
@@ -106,8 +104,8 @@ class InMemoryDB:
     tree: KdTree
     tree_extra: KdTree
 
-    def __init__(self, version_info) -> None:
-        self.version_info: dict = version_info
+    def __init__(self, version) -> None:
+        self.version = version
         # load line list
         lines = json.loads(
             get_url(f"{URL_DATA_BASE}/extra/line.json")
@@ -137,24 +135,7 @@ class InMemoryDB:
         self.tree_extra = KdTree(nodes)
 
 
-session = Session()
-id = session.query(sqlalchemy.func.max(DataInfo.id)).first()[0]
-current = session.query(DataInfo).filter(
-    DataInfo.id == id).first() if id is not None else None
-latest = json.loads(get_url(URL_DATA_VERSION))
-if current is None or current.data_version < latest['version']:
-    print(f"new data found. info:{latest}")
-    info = DataInfo()
-    info.data_version = latest["version"]
-    info.updated_at = datetime.now(JST)
-    session.add(info)
-    session.commit()
-    current = info
-else:
-    print(f"data is up-to-dated. version:{latest['version']}")
+info = json.loads(get_url(URL_DATA_VERSION))
+print(f"new data found. info:{info}")
 
-
-data_info_schema = DataInfoSchema()
-info = data_info_schema.dump(current)
-
-data = InMemoryDB(info)
+data = InMemoryDB(info["version"])
