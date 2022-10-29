@@ -1,22 +1,13 @@
-from fastapi import FastAPI, Query, Request
-from pydantic import BaseModel, Field
-from typing import Optional, List
-import sys
-import pathlib
-import os
-from fastapi import Depends, HTTPException, status
-from datetime import datetime
 import json
+
+from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
-from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
+from starlette.middleware.cors import CORSMiddleware
 
-from py.router import router, APIException
-from py.db import Session
-
-
+from py.router import APIException, router
 
 # defince app instance
 api_setting = json.load(open('./api_setting.json','r',encoding='utf-8'))
@@ -66,7 +57,6 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     print('shutdown')
-    Session.remove()
 
 # users routerを登録する。
 app.include_router(router)

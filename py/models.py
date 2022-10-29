@@ -1,12 +1,9 @@
 from pydantic import BaseModel, Field
-import datetime
 
 
 class DataInfoOut(BaseModel):
     data_version: int = Field(
-        ..., description="データバージョン [station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)")
-    updated_at: datetime.datetime = Field(...,
-                                          description="現在のデータバージョンに更新された日時")
+        ..., description="このAPIが返すデータのバージョン 基本的に[station_databaseリポジトリの最新データ](https://github.com/Seo-4d696b75/station_database/blob/master/latest_info.json)のバージョンに追従しますが、反映まで時間がかかる場合があります.")
 
 
 class BaseStationOut(BaseModel):
