@@ -39,25 +39,27 @@ gcloud auth login
 gcloud config set project ${PROJECT_ID}
 gcloud config set run/region asia-northeast1 // リージョン指定（任意）
 ```
+4. Dockerに認証情報をセット
+```
+gcloud auth configure-docker
+```
 
 ### イメージのbuild
 
 1. Docker Desktopなどで使用する場合
 
-buildと同じ環境で使う場合
 ```
 docker build -t station-api-image:${version} . 
 ```
 
 2. GCRにデプロイする場合
 
-M1 MacでBuildしてGCRにデプロイする場合など環境の違いで実行できない
 ```
 docker build -t asia.gcr.io/${PROJECT_ID}/station-api-image:${version} . --platform linux/amd64
 ```
 
 ### イメージのPush
-GCR(Google Container Registry)を利用します
+Google Container Registryを利用します
 ```
 docker push asia.gcr.io/${PROJECT_ID}/station-api-image:${version}
 ```
@@ -68,6 +70,7 @@ docker push asia.gcr.io/${PROJECT_ID}/station-api-image:${version}
 
 
 ##　Conda環境（デプロイなし）
+
 ローカルで手軽に実行・開発するのに便利です
 
 **注意** HerokuからGoogle Cloud Runへの移行に伴いデプロイにはDockerイメージのビルドが必要です
