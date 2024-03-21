@@ -42,7 +42,7 @@ class Station:
         self.closed = bool(obj["closed"])
         self.open_date: Union[str, None] = obj.get("open_date", None)
         self.closed_date: Union[str, None] = obj.get("closed_date", None)
-        self.impl = bool(obj["impl"])
+        self.extra = bool(obj["extra"])
         self.attr: Union[str, None] = obj.get("attr", None)
 
     def dump(self):
@@ -60,7 +60,7 @@ class Station:
             "closed": self.closed,
             "open_date": self.open_date,
             "closed_date": self.closed_date,
-            "impl": self.impl,
+            "extra": self.extra,
             "attr": self.attr
         }
 
@@ -77,7 +77,7 @@ class Line:
         self.symbol: Union[str, None] = obj.get("symbol", None)
         self.closed = bool(obj["closed"])
         self.closed_date: Union[str, None] = obj.get("closed_date", None)
-        self.impl = bool(obj["impl"])
+        self.extra = bool(obj["extra"])
 
     def dump(self):
         return {
@@ -91,7 +91,7 @@ class Line:
             "symbol": self.symbol,
             "closed": self.closed,
             "closed_date": self.closed_date,
-            "impl": self.impl,
+            "extra": self.extra,
         }
 
 

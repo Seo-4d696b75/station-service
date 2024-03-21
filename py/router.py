@@ -130,7 +130,7 @@ async def search_for_station(
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
     if not extra:
-        criteria = _and(lambda e: e.impl, criteria)
+        criteria = _and(lambda e: not e.extra, criteria)
     stations = [s.dump() for s in data.stations if criteria(s)]
     return stations
 
@@ -150,7 +150,7 @@ async def search_for_line(
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
     if not extra:
-        criteria = _and(lambda e: e.impl, criteria)
+        criteria = _and(lambda e: not e.extra, criteria)
     lines = [l.dump() for l in data.lines if criteria(l)]
     return lines
 

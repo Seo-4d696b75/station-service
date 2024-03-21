@@ -15,7 +15,7 @@ class BaseStationOut(BaseModel):
                            description="駅名称のかな表記（駅名重複防止のための接尾語のかな表記は含まず・一部ひらがな以外の記号を含む）")
     prefecture: int = Field(
         ..., description="駅所在地の[都道府県コード](https://www.soumu.go.jp/denshijiti/code.html)")
-    impl: bool = Field(..., description="駅メモ実装なら`true`")
+    extra: bool = Field(..., description="駅メモ実装なら`false`")
 
 
 class StationOut(BaseStationOut):
@@ -34,7 +34,7 @@ class BaseLineOut(BaseModel):
     id: str = Field(..., description="路線ID")
     name: str = Field(..., description="路線の名称")
     name_kana: str = Field(..., description="路線名称のかな表記（括弧などの記号はそのまま）")
-    impl: bool = Field(..., description="駅メモ実装なら`true`")
+    extra: bool = Field(..., description="駅メモ実装なら`false`")
 
 
 class LineOut(BaseLineOut):
