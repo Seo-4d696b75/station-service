@@ -29,39 +29,49 @@ Heroku から Google Cloud Run にデプロイ先を変更しました
 Google Cloud Runにデプロイするのに必要です
 
 ### gcloud CLIのセットアップ
+
+リージョン指定は適宜読み替えて下さい
+
 1. [インストール](https://cloud.google.com/sdk/docs/install?hl=ja)
 2. Google Cloudを利用するアカウントでログイン
-```
+```bash
 gcloud auth login
 ```
+
 3. プロジェクトの指定
-```
+```bash
 gcloud config set project ${PROJECT_ID}
-gcloud config set run/region asia-northeast1 // リージョン指定（任意）
+gcloud config set run/region asia-northeast1
 ```
+
 4. Dockerに認証情報をセット
-```
-gcloud auth configure-docker
+
+```bash
+gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 ```
 
 ### イメージのbuild
 
 1. Docker Desktopなどで使用する場合
 
-```
-docker build -t station-api-image:${version} . 
+```bash
+docker build -t ${local_name}:${local_tag} . 
 ```
 
 2. GCRにデプロイする場合
 
-```
-docker build -t asia.gcr.io/${PROJECT_ID}/station-api-image:${version} . --platform linux/amd64
+```bash
+docker build -t ${local_name}:${local_tag} . --platform linux/amd64
 ```
 
 ### イメージのPush
-Google Container Registryを利用します
-```
-docker push asia.gcr.io/${PROJECT_ID}/station-api-image:${version}
+[Google Artifact Registryを利用します](https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling?hl=ja)
+
+`tag=asia-northeast1-docker.pkg.dev/${project_id}/${repo}/${remote_name}:${remote_tag}`
+
+```bash
+docker tag ${local_name}:${local_tag} $tag
+docker push $tag
 ```
 
 ### Google Cloud Runへのデプロイ
