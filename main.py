@@ -15,8 +15,8 @@ app = FastAPI(
     version = api_setting['version'],
     description = api_setting['description'],
     openapi_tags = api_setting['meta_data'],
-    docs_url = '/api/docs',
-    openapi_url = '/api/openapi.json'
+    docs_url = '/docs',
+    openapi_url = '/openapi.json'
 )
 
 # Handling RequestValidationError as status=400
