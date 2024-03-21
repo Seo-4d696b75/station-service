@@ -7,14 +7,6 @@
 			"description": "APIが返すデータのバージョン情報"
 		},
 		{
-			"name": "station",
-			"description": "駅の情報を取得する"
-		},
-		{
-			"name": "line",
-			"description": "路線の情報を取得する"
-		},
-		{
 			"name": "get",
 			"description": "指定した駅または路線を取得する. 各オブジェクトはコード`[0-9]{5-7}`もしくはID`[0-9a-f]{6}`で一意に区別される"
 		},

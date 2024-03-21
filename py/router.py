@@ -48,7 +48,7 @@ async def get_info():
     }
 
 
-@router.get("/api/station", response_model=models.StationOut, tags=['get', 'station'])
+@router.get("/api/station", response_model=models.StationOut, tags=['get'])
 async def get_station(
         code: int = Query(0, description='駅コードの値'),
         id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
@@ -78,7 +78,7 @@ async def get_station(
     return station.dump()
 
 
-@router.get("/api/line", response_model=models.LineOut, tags=['get', 'line'])
+@router.get("/api/line", response_model=models.LineOut, tags=['get'])
 async def get_line(
         code: int = Query(0, description='路線コードの値'),
         id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
@@ -108,7 +108,7 @@ async def get_line(
     return line.dump()
 
 
-@router.get("/api/station/search", response_model=List[models.BaseStationOut], tags=['station', 'name_search'])
+@router.get("/api/station/search", response_model=List[models.BaseStationOut], tags=['name_search'])
 async def search_for_station(
         name: str = Query(..., description='駅名称または読み仮名の全部・一部分', min_length=1),
         original: bool = Query(
@@ -135,7 +135,7 @@ async def search_for_station(
     return stations
 
 
-@router.get("/api/line/search", response_model=List[models.BaseLineOut], tags=['line', 'name_search'])
+@router.get("/api/line/search", response_model=List[models.BaseLineOut], tags=['name_search'])
 async def search_for_line(
         name: str = Query(..., description='路線名称または読み仮名の全部・一部分', min_length=1),
         extra: bool = Query(
@@ -155,7 +155,7 @@ async def search_for_line(
     return lines
 
 
-@router.get("/api/station/nearest", response_model=List[models.NearestSearchOut], tags=['station', 'nearest_search'])
+@router.get("/api/station/nearest", response_model=List[models.NearestSearchOut], tags=['nearest_search'])
 async def nearest_search(
         lat: float = Query(..., description='探索点の緯度', ge=-90, le=90),
         lng: float = Query(..., description='探索点の経度', ge=-180, le=180),
