@@ -75,18 +75,19 @@ docker push asia.gcr.io/${PROJECT_ID}/station-api-image:${version}
 
 **注意** HerokuからGoogle Cloud Runへの移行に伴いデプロイにはDockerイメージのビルドが必要です
 
-### Conda環境のセットアップ
+### 環境のセットアップ
 ```bash
-conda create --name station-service python=3.6.4
+conda create --name station-service python=3.12
 conda activate station-service
-```
-
-### パッケージのインストール
-```bash
 pip install -r requirements.txt
 ```
 
-### VSCodeの設定
+### ローカル実行
+```bash
+uvicorn main:app --host 0.0.0.0 --port 3003 --reload
+```
+
+### VSCodeのデバッグ設定
 ```json
 {
   "python.condaPath": "/Users/${you}/opt/anaconda3/condabin/conda",
