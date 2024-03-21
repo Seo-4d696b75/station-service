@@ -4,7 +4,6 @@ from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
 from starlette.middleware.cors import CORSMiddleware
 
 from py.router import APIException, router
@@ -39,15 +38,6 @@ async def api_exception_handler(request: Request, exc: APIException):
             'msg': exc.msg,
             'detail': exc.detail }),
         headers=exc.headers
-    )
-
-@app.exception_handler(SQLAlchemyError)
-async def db_exception_handler(request: Request, exc: SQLAlchemyError):
-    return JSONResponse(
-        status_code = status.HTTP_400_BAD_REQUEST,
-        content = jsonable_encoder({
-            'msg':'internal db error.',
-            'detail': exc.errors()})
     )
 
 @app.on_event("startup")
