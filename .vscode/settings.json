@@ -1,3 +1,8 @@
 {
-  "editor.tabSize": 4
+  "editor.tabSize": 4,
+  "python.condaPath": "/Users/k_senda/opt/anaconda3/condabin/conda",
+  "python.defaultInterpreterPath": "/Users/k_senda/opt/anaconda3/envs/station-service/bin/python",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  }
 }
