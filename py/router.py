@@ -26,7 +26,7 @@ pattern_kana = regex.compile(r'[\p{Hiragana}\p{P}ー・]+')
 async def get_root():
     return responses.HTMLResponse(
         content="""
-        <h1>Station-Service API へようこそ!</h1>
+        <h1>Station API へようこそ!</h1>
         <a href="/docs">APIの詳細はDocsを参照してください</a>
         <script>""" +
         logo_text +
