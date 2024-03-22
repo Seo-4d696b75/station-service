@@ -19,5 +19,5 @@
 			"description": "指定した点の近傍の駅を探す. 返値のリストは距離の近い順にソートされている  \nパラメータ`s: bool`で探索時の距離測定手法が変わるので結果の順序が変化する場合がある  \n**注意**：日本国内・近傍での使用を前提とするため、経度＝±180[deg]を跨ぐ距離を正しく扱えない  \n- `false` 緯度・経度の値で疑似的にユークリッド距離を計算する  \n**注意**：高緯度では東西方向の距離が実際より大きく評価される  \n- `true` [平均地球半径6371km](https://en.wikipedia.org/wiki/World_Geodetic_System#A_new_World_Geodetic_System:_WGS_84)を用いて完全な球体を仮定し大円距離で計算する"
 		}
 	],
-	"description": "\"Station Service\" は日本全国の駅・路線データを簡単に取得できるREST APIです.  \n駅メモ以外の廃線・廃駅を独自に追加した[extraデータセット](https://github.com/Seo-4d696b75/station_database/wiki/extra)に対応しました.  extraデータセットを検索に含めるか`extra`クエリで指定できます.  APIが扱うデータは[Githubリポジトリ station_database](https://github.com/Seo-4d696b75/station_database)で管理されています.  APIのソースコードは[Githubリポジトリ](https://github.com/Seo-4d696b75/station-service)で公開されています."
+	"description": "\"Station Service\" は日本全国の駅・路線データを簡単に取得できるREST APIです.  \n- 駅メモ以外の廃線・廃駅を独自に追加した[extraデータセット](https://github.com/Seo-4d696b75/station_database/wiki/extra)に対応しました.  extraデータセットを検索に含めるか`extra`クエリで指定できます.  \n- APIが扱うデータは[Githubリポジトリ station_database](https://github.com/Seo-4d696b75/station_database)で管理されています.  \n- APIのソースコードは[Githubリポジトリ](https://github.com/Seo-4d696b75/station-service)で公開されています."
 }
