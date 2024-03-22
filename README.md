@@ -1,7 +1,9 @@
 # Station-Service
 
-日本中の駅・路線データへの簡潔なアクセス手段を提供します.   
-API Docs: https://station-service-5bzhd44ozq-an.a.run.app/api/docs
+日本中の駅・路線データを簡単に取得できるREST APIです
+
+- URL：https://api.station.seo4d696b75.com/
+- [各エンドポイントの詳細はSwagger UIを参照してください](https://api.station.seo4d696b75.com/docs)
 
 <img src="https://user-images.githubusercontent.com/25225028/172044813-31d2d023-f2d6-4752-b63c-c235acdc9708.png" width="500">
 
