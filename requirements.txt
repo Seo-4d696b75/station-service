@@ -1,8 +1,4 @@
 fastapi
-email-validator
 uvicorn
-psycopg2
-sqlalchemy
 marshmallow
-marshmallow_sqlalchemy
 regex

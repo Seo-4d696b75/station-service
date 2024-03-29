@@ -1,10 +1,9 @@
 import json
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
+from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
 
 from py.router import APIException, router
@@ -16,8 +15,8 @@ app = FastAPI(
     version = api_setting['version'],
     description = api_setting['description'],
     openapi_tags = api_setting['meta_data'],
-    docs_url = '/api/docs',
-    openapi_url = '/api/openapi.json'
+    docs_url = '/docs',
+    openapi_url = '/openapi.json'
 )
 
 # Handling RequestValidationError as status=400
@@ -41,14 +40,20 @@ async def api_exception_handler(request: Request, exc: APIException):
         headers=exc.headers
     )
 
-@app.exception_handler(SQLAlchemyError)
-async def db_exception_handler(request: Request, exc: SQLAlchemyError):
-    return JSONResponse(
-        status_code = status.HTTP_400_BAD_REQUEST,
-        content = jsonable_encoder({
-            'msg':'internal db error.',
-            'detail': exc.errors()})
-    )
+# 暫定的なリダイレクト対応
+@app.exception_handler(404)
+def recover_old_404(request: Request, exc: HTTPException):
+    pathSegments = [s for s in request.url.path.split('/') if s != '']
+    if len(pathSegments) > 0 and pathSegments[0] == 'api':
+        return RedirectResponse(
+            url=f"/{'/'.join(pathSegments[1:])}?{request.query_params}",
+            status_code=301,
+        )
+    else:
+        return JSONResponse(
+            content={'detail': 'Not Found. See API docs for more details at /docs'},
+            status_code=404,
+        )
 
 @app.on_event("startup")
 async def startup():

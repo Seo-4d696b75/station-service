@@ -26,29 +26,21 @@ pattern_kana = regex.compile(r'[\p{Hiragana}\p{P}ー・]+')
 async def get_root():
     return responses.HTMLResponse(
         content="""
-        <h1>Station-Service API へようこそ!</h1>
-        <a href="/api/docs">APIの詳細はDocsを参照してください</a>
+        <h1>Station API へようこそ!</h1>
+        <a href="/docs">APIの詳細はDocsを参照してください</a>
         <script>""" +
         logo_text +
         "</script>"
     )
 
-
-@router.get("/api")
-async def api_root():
-    return responses.RedirectResponse(
-        url="/api/docs"
-    )
-
-
-@router.get("/api/info", response_model=models.DataInfoOut, tags=['info'])
+@router.get("/info", response_model=models.DataInfoOut, tags=['info'])
 async def get_info():
     return {
         "data_version": data.version,
     }
 
 
-@router.get("/api/station", response_model=models.StationOut, tags=['get', 'station'])
+@router.get("/station", response_model=models.StationOut, tags=['get'])
 async def get_station(
         code: int = Query(0, description='駅コードの値'),
         id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
@@ -78,7 +70,7 @@ async def get_station(
     return station.dump()
 
 
-@router.get("/api/line", response_model=models.LineOut, tags=['get', 'line'])
+@router.get("/line", response_model=models.LineOut, tags=['get'])
 async def get_line(
         code: int = Query(0, description='路線コードの値'),
         id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
@@ -108,7 +100,7 @@ async def get_line(
     return line.dump()
 
 
-@router.get("/api/station/search", response_model=List[models.BaseStationOut], tags=['station', 'name_search'])
+@router.get("/station/search", response_model=List[models.BaseStationOut], tags=['name_search'])
 async def search_for_station(
         name: str = Query(..., description='駅名称または読み仮名の全部・一部分', min_length=1),
         original: bool = Query(
@@ -130,12 +122,12 @@ async def search_for_station(
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
     if not extra:
-        criteria = _and(lambda e: e.impl, criteria)
+        criteria = _and(lambda e: not e.extra, criteria)
     stations = [s.dump() for s in data.stations if criteria(s)]
     return stations
 
 
-@router.get("/api/line/search", response_model=List[models.BaseLineOut], tags=['line', 'name_search'])
+@router.get("/line/search", response_model=List[models.BaseLineOut], tags=['name_search'])
 async def search_for_line(
         name: str = Query(..., description='路線名称または読み仮名の全部・一部分', min_length=1),
         extra: bool = Query(
@@ -150,12 +142,12 @@ async def search_for_line(
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
     if not extra:
-        criteria = _and(lambda e: e.impl, criteria)
+        criteria = _and(lambda e: not e.extra, criteria)
     lines = [l.dump() for l in data.lines if criteria(l)]
     return lines
 
 
-@router.get("/api/station/nearest", response_model=List[models.NearestSearchOut], tags=['station', 'nearest_search'])
+@router.get("/station/nearest", response_model=List[models.NearestSearchOut], tags=['nearest_search'])
 async def nearest_search(
         lat: float = Query(..., description='探索点の緯度', ge=-90, le=90),
         lng: float = Query(..., description='探索点の経度', ge=-180, le=180),
