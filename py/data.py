@@ -30,7 +30,7 @@ URL_DATA_VERSION = data_env["data_version_url"]
 class Station:
     def __init__(self, obj: dict) -> None:
         self.code = int(obj["code"])
-        self.id = str(obj["id"])
+        self.id = int(obj["id"])
         self.name = str(obj["name"])
         self.original_name = str(obj["original_name"])
         self.name_kana = str(obj["name_kana"])
@@ -68,7 +68,7 @@ class Station:
 class Line:
     def __init__(self, obj: dict) -> None:
         self.code = int(obj["code"])
-        self.id = str(obj["id"])
+        self.id = int(obj["id"])
         self.name = str(obj["name"])
         self.name_kana = str(obj["name_kana"])
         self.station_size = int(obj["station_size"])
@@ -97,9 +97,11 @@ class Line:
 
 class InMemoryDB:
     version: int
-    station_map: "dict[Union[int, str], Station]" = {}
+    station_code_map: "dict[int, Station]" = {}
+    station_id_map: "dict[int, Station]" = {}
     stations: "list[Station]" = []
-    line_map: "dict[Union[int, str], Line]" = {}
+    line_code_map: "dict[int, Line]" = {}
+    line_id_map: "dict[int, Line]" = {}
     lines: "list[Line]" = []
     tree: KdTree
     tree_extra: KdTree
@@ -113,8 +115,8 @@ class InMemoryDB:
         for obj in lines:
             line = Line(obj)
             self.lines.append(line)
-            self.line_map[line.code] = line
-            self.line_map[line.id] = line
+            self.line_code_map[line.code] = line
+            self.line_id_map[line.id] = line
         # load station list
         stations = json.loads(
             get_url(f"{URL_DATA_BASE}/extra/station.json")
@@ -122,8 +124,8 @@ class InMemoryDB:
         for obj in stations:
             station = Station(obj)
             self.stations.append(station)
-            self.station_map[station.code] = station
-            self.station_map[station.id] = station
+            self.station_code_map[station.code] = station
+            self.station_id_map[station.id] = station
         # load kd-tree
         nodes = json.loads(
             get_url(f"{URL_DATA_BASE}/main/tree.json")

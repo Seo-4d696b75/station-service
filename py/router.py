@@ -43,16 +43,16 @@ async def get_info():
 @router.get("/station", response_model=models.StationOut, tags=['get'])
 async def get_station(
         code: int = Query(0, description='駅コードの値'),
-        id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
+        id: int = Query(0, description='駅IDの値', min=1)
 ):
-    if code == 0 and id is None:
+    if code == 0 and id == 0:
         raise APIException(
             400,
             'lack of query',
             'either code or id must be specified.'
         )
-    if id is not None:
-        station = data.station_map.get(id, None)
+    if id > 0:
+        station = data.station_id_map.get(id, None)
         if station is None:
             raise APIException(
                 404,
@@ -60,7 +60,7 @@ async def get_station(
                 f"station identified by id:{id} not found"
             )
     else:
-        station = data.station_map.get(code, None)
+        station = data.station_code_map.get(code, None)
         if station is None:
             raise APIException(
                 404,
@@ -73,16 +73,16 @@ async def get_station(
 @router.get("/line", response_model=models.LineOut, tags=['get'])
 async def get_line(
         code: int = Query(0, description='路線コードの値'),
-        id: str = Query(None, description='駅IDの値', min_length=6, max_length=6)
+        id: int = Query(0, description='駅IDの値', min=1)
 ):
-    if code == 0 and id is None:
+    if code == 0 and id == 0:
         raise APIException(
             400,
             'lack of query',
             'either code or id must be specified.'
         )
-    if id is not None:
-        line = data.line_map.get(id, None)
+    if id > 0:
+        line = data.line_id_map.get(id, None)
         if line is None:
             raise APIException(
                 404,
@@ -90,7 +90,7 @@ async def get_line(
                 f"line identified by id:{id} not found"
             )
     else:
-        line = data.line_map.get(code, None)
+        line = data.line_code_map.get(code, None)
         if line is None:
             raise APIException(
                 404,
@@ -164,7 +164,7 @@ async def nearest_search(
     list = [
         {
             'dist': round(d['dist'], digit),
-            'station': data.station_map[d['code']].dump()
+            'station': data.station_code_map[d['code']].dump()
         }
         for d in neighbors
     ]
