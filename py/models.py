@@ -7,8 +7,8 @@ class DataInfoOut(BaseModel):
 
 
 class BaseStationOut(BaseModel):
-    code: int = Field(..., description="駅コード")
-    id: str = Field(..., description="駅ID")
+    code: int = Field(..., description="駅コード. 駅IDとは異なりデータバージョンによって変化する場合があります.")
+    id: int = Field(..., description="駅ID. 駅メモ公式Webサイトの「駅の思い出」ページのURL https://ekimemo.com/database/station/{id}/activity に対応しています.")
     name: str = Field(..., description="駅の名称")
     original_name: str = Field(..., description="駅名称のうち重複防止の接尾語を取り除いた名前")
     name_kana: str = Field(...,
@@ -30,8 +30,8 @@ class StationOut(BaseStationOut):
 
 
 class BaseLineOut(BaseModel):
-    code: int = Field(..., description="路線コード")
-    id: str = Field(..., description="路線ID")
+    code: int = Field(..., description="路線コード. 路線IDとは異なりデータバージョンによって変化する場合があります.")
+    id: int = Field(..., description="路線ID. 駅メモ公式Webサイトの「駅の思い出」ページのURL https://ekimemo.com/database/line/{id} に対応しています.")
     name: str = Field(..., description="路線の名称")
     name_kana: str = Field(..., description="路線名称のかな表記（括弧などの記号はそのまま）")
     extra: bool = Field(..., description="駅メモ実装なら`false`")
