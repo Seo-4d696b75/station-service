@@ -15,17 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
+      # Pythonのバージョンは .python-version に従う
+      - uses: astral-sh/setup-uv@v10
         with:
-          # Dockerfile と揃える
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            requirements-dev.txt
+          enable-cache: true
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: uv sync --locked
 
       - name: Run tests
-        run: pytest
+        run: uv run pytest
