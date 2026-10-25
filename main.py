@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from py.router import APIException, router
+from src.router import APIException, router
 
 # defince app instance
 api_setting = json.load(open('./api_setting.json','r',encoding='utf-8'))

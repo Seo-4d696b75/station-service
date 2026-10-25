@@ -3,7 +3,7 @@ import urllib.request
 from datetime import timedelta, timezone
 from typing import Union
 
-from py.tree import KdTree
+from src.tree import KdTree
 
 JST = timezone(timedelta(hours=+9), 'JST')
 

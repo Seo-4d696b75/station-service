@@ -3,8 +3,8 @@ from typing import List
 import regex
 from fastapi import APIRouter, Query, responses
 
-from py import models
-from py.data import data, logo_text
+from src import models
+from src.data import data, logo_text
 
 # Base Error
 
@@ -43,7 +43,7 @@ async def get_info():
 @router.get("/station", response_model=models.StationOut, tags=['get'])
 async def get_station(
         code: int = Query(0, description='駅コードの値'),
-        id: int = Query(0, description='駅IDの値', min=1)
+        id: int = Query(0, description='駅IDの値', ge=1)
 ):
     if code == 0 and id == 0:
         raise APIException(
@@ -73,7 +73,7 @@ async def get_station(
 @router.get("/line", response_model=models.LineOut, tags=['get'])
 async def get_line(
         code: int = Query(0, description='路線コードの値'),
-        id: int = Query(0, description='駅IDの値', min=1)
+        id: int = Query(0, description='駅IDの値', ge=1)
 ):
     if code == 0 and id == 0:
         raise APIException(
@@ -115,9 +115,9 @@ async def search_for_station(
     if len(name) == 1 and pattern_kana.fullmatch(name):
         return []
     criteria = (
-        lambda e: name in e.original_name
+        (lambda e: name in e.original_name)
         if original else
-        lambda e: name in e.name
+        (lambda e: name in e.name)
     )
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
