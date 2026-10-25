@@ -115,9 +115,9 @@ async def search_for_station(
     if len(name) == 1 and pattern_kana.fullmatch(name):
         return []
     criteria = (
-        lambda e: name in e.original_name
+        (lambda e: name in e.original_name)
         if original else
-        lambda e: name in e.name
+        (lambda e: name in e.name)
     )
     if pattern_kana.fullmatch(name) is not None:
         criteria = _or(criteria, lambda e: name in e.name_kana)
