@@ -99,6 +99,13 @@ pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 3003 --reload
 ```
 
+### テスト
+データの取得をテスト用のデータに差し替えて各エンドポイントを検証します（ネットワークアクセスなし）
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
 ### VSCodeのデバッグ設定
 ```json
 {
