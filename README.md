@@ -81,36 +81,38 @@ docker push $tag
 
 
 
-##　Conda環境（デプロイなし）
+## ローカル環境（デプロイなし）
 
 ローカルで手軽に実行・開発するのに便利です
 
 **注意** HerokuからGoogle Cloud Runへの移行に伴いデプロイにはDockerイメージのビルドが必要です
 
 ### 環境のセットアップ
+[uv](https://docs.astral.sh/uv/getting-started/installation/) をインストールしてから実行します  
+Pythonのバージョンは `.python-version` に、依存パッケージのバージョンは `uv.lock` に従います
 ```bash
-conda create --name station-service python=3.12
-conda activate station-service
-pip install -r requirements.txt
+uv sync
+```
+
+### 依存パッケージの追加・更新
+`pyproject.toml` と `uv.lock` の変更をコミットしてください
+```bash
+uv add ${package}          # 本番用
+uv add --dev ${package}    # 開発用
+uv lock --upgrade-package ${package}
 ```
 
 ### ローカル実行
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 3003 --reload
+uv run uvicorn main:app --host 0.0.0.0 --port 3003 --reload
 ```
 
 ### テスト
 データの取得をテスト用のデータに差し替えて各エンドポイントを検証します（ネットワークアクセスなし）  
 PRを作成・更新するとGitHub Actionsで自動実行されます
 ```bash
-pip install -r requirements-dev.txt
-pytest
+uv run pytest
 ```
 
 ### VSCodeのデバッグ設定
-```json
-{
-  "python.condaPath": "/Users/${you}/opt/anaconda3/condabin/conda",
-  "python.defaultInterpreterPath": "/Users/${you}/opt/anaconda3/envs/station-service/bin/python"
-}
-```
+`.vscode/settings.json` で `uv sync` が作成した `.venv` のPythonを使うよう設定済みです
