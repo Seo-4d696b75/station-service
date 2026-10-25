@@ -3,7 +3,7 @@ import math
 import pytest
 
 from fixture_data import (ALL_STATIONS, MAIN_STATIONS, STATION_OLD_SHINBASHI,
-                          STATION_TOKYO)
+                          STATION_SHINJUKU, STATION_TOKYO)
 
 SPHERE_RADIUS = 6371009.0
 
@@ -54,15 +54,56 @@ def test_sorted_by_distance(client, k):
     assert dists == sorted(dists)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="KdTree.search は探索中のリストがk件未満でも、末尾より遠い点を追加しないためk件に満たない場合がある",
-)
 def test_returns_k_stations(client):
+    # https://github.com/Seo-4d696b75/station-service/issues/10
     result = search(client, **POS_NEAR_TOKYO, k=3)
     expected = expected_nearest(
         MAIN_STATIONS, POS_NEAR_TOKYO["lat"], POS_NEAR_TOKYO["lng"], 3, False)
     assert [r["station"]["code"] for r in result] == [s["code"] for s in expected]
+
+
+def test_at_root_station(client):
+    # kd-treeの根の駅の座標ちょうどで探索してもk件返す
+    pos = {"lat": STATION_SHINJUKU["lat"], "lng": STATION_SHINJUKU["lng"]}
+    result = search(client, **pos, k=3)
+    expected = expected_nearest(MAIN_STATIONS, pos["lat"], pos["lng"], 3, False)
+    assert [r["station"]["code"] for r in result] == [s["code"] for s in expected]
+
+
+@pytest.mark.parametrize("extra", [False, True])
+def test_k_larger_than_station_size(client, extra):
+    stations = ALL_STATIONS if extra else MAIN_STATIONS
+    result = search(client, **POS_NEAR_TOKYO, k=10, extra=extra)
+    expected = expected_nearest(
+        stations, POS_NEAR_TOKYO["lat"], POS_NEAR_TOKYO["lng"], 10, False)
+    assert [r["station"]["code"] for r in result] == [s["code"] for s in expected]
+
+
+# 各駅の近傍・駅から離れた地点・日本の外側など
+POSITIONS = [
+    {"lat": s["lat"] + dlat, "lng": s["lng"] + dlng}
+    for s in ALL_STATIONS
+    for dlat, dlng in [(0.0, 0.0), (0.01, -0.02), (-0.03, 0.01)]
+] + [
+    {"lat": 35.0, "lng": 136.0},
+    {"lat": 43.06, "lng": 141.35},
+    {"lat": 26.21, "lng": 127.68},
+    {"lat": 0.0, "lng": 0.0},
+    {"lat": -45.0, "lng": -120.0},
+]
+
+
+@pytest.mark.parametrize("s", [False, True])
+@pytest.mark.parametrize("extra", [False, True])
+def test_matches_brute_force(client, s, extra):
+    stations = ALL_STATIONS if extra else MAIN_STATIONS
+    for pos in POSITIONS:
+        for k in range(1, len(stations) + 1):
+            result = search(client, **pos, k=k, s=s, extra=extra)
+            expected = expected_nearest(
+                stations, pos["lat"], pos["lng"], k, s)
+            assert [r["station"]["code"] for r in result] == \
+                [e["code"] for e in expected], f"pos:{pos} k:{k}"
 
 
 def test_sphere(client):

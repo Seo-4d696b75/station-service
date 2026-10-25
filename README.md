@@ -100,7 +100,8 @@ uvicorn main:app --host 0.0.0.0 --port 3003 --reload
 ```
 
 ### テスト
-データの取得をテスト用のデータに差し替えて各エンドポイントを検証します（ネットワークアクセスなし）
+データの取得をテスト用のデータに差し替えて各エンドポイントを検証します（ネットワークアクセスなし）  
+PRを作成・更新するとGitHub Actionsで自動実行されます
 ```bash
 pip install -r requirements-dev.txt
 pytest

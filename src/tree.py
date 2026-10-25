@@ -78,8 +78,8 @@ class KdTree:
                 if d >= dst[index-1]['dist']:
                     break
                 index -= 1
-        elif size == 0:
-            index = 0
+        elif size < k:
+            index = size
         if index >= 0:
             dst.insert(index, {'dist':d, 'code':node.code})
             if size >= k and dst[size]['dist'] > r:
@@ -96,7 +96,7 @@ class KdTree:
             dist2th = distance_to_longitude(pos, threshold)
         elif sphere and not x:
             dist2th = SPHERE_RADIUS * math.pi * abs(value - threshold) / 180
-        if next is not None and dist2th < max(dst[-1]['dist'], r):
+        if next is not None and (len(dst) < k or dist2th < max(dst[-1]['dist'], r)):
             self.search(next, pos, k, r, dst, sphere)
 
 
