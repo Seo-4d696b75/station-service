@@ -3,8 +3,8 @@ from typing import List
 import regex
 from fastapi import APIRouter, Query, responses
 
-from py import models
-from py.data import data, logo_text
+from src import models
+from src.data import data, logo_text
 
 # Base Error
 

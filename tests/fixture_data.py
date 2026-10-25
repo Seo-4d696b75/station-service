@@ -150,7 +150,7 @@ ALL_LINES = [LINE_YAMANOTE, LINE_CHUO, LINE_TODEN]
 def build_kd_tree(stations):
     """station_database の tree.json と同じ形式のkd-treeを構築する
 
-    深さが偶数のノードは経度、奇数のノードは緯度で分割する（py/tree.py の探索と対応）
+    深さが偶数のノードは経度、奇数のノードは緯度で分割する（src/tree.py の探索と対応）
     """
     node_list = []
 
@@ -178,7 +178,7 @@ def build_kd_tree(stations):
     return {"root": root, "node_list": node_list}
 
 
-# py/data.py が取得するURLの末尾 → レスポンス
+# src/data.py が取得するURLの末尾 → レスポンス
 RESPONSES = {
     "latest_info.extra.json": {"version": DATA_VERSION},
     "/extra/line.json": ALL_LINES,

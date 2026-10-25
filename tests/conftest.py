@@ -38,7 +38,7 @@ def fake_urlopen(url):
 
 @pytest.fixture(scope="session")
 def client():
-    # py.data はimport時にデータを取得するので、その間だけネットワークアクセスを差し替える
+    # src.data はimport時にデータを取得するので、その間だけネットワークアクセスを差し替える
     with mock.patch("urllib.request.urlopen", fake_urlopen):
         from main import app
     return TestClient(app)
