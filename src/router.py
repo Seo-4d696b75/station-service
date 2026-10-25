@@ -43,7 +43,7 @@ async def get_info():
 @router.get("/station", response_model=models.StationOut, tags=['get'])
 async def get_station(
         code: int = Query(0, description='駅コードの値'),
-        id: int = Query(0, description='駅IDの値', min=1)
+        id: int = Query(0, description='駅IDの値', ge=1)
 ):
     if code == 0 and id == 0:
         raise APIException(
@@ -73,7 +73,7 @@ async def get_station(
 @router.get("/line", response_model=models.LineOut, tags=['get'])
 async def get_line(
         code: int = Query(0, description='路線コードの値'),
-        id: int = Query(0, description='駅IDの値', min=1)
+        id: int = Query(0, description='駅IDの値', ge=1)
 ):
     if code == 0 and id == 0:
         raise APIException(
