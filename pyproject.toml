@@ -1,0 +1,21 @@
+[project]
+name = "station-service"
+version = "0.3.0"
+description = "日本中の駅・路線データを簡単に取得できるREST API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162.0",
+    "regex>=2026.9.29",
+    "uvicorn>=0.54.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]
